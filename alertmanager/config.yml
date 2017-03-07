@@ -1,10 +1,13 @@
 route:
-    receiver: 'slack'
+  group_by: [alertname]
+  receiver: email-me
 
 receivers:
-    - name: 'slack'
-      slack_configs:
-          - send_resolved: true
-            username: '<username>'
-            channel: '#<channel-name>'
-            api_url: '<incomming-webhook-url>'
+- name: email-me
+  email_configs:
+  - to: kar.prasenjit@xxxx.com
+    from: pkagiletcs@gmail.com
+    smarthost: smtp.gmail.com:587
+    auth_username: "pkagiletcs@gmail.com"
+    auth_identity: "pkagiletcs@gmail.com"
+    auth_password: "XXXXXXXXXXXXXX"
