@@ -12,10 +12,11 @@ global:
 
 # Load and evaluate rules in this file every 'evaluation_interval' seconds.
 rule_files:
-  - "cpu-usage.rules"
-  - "mem-usage.rules"
-  - "load-average.rules"
-  - "low-disk-space.rules"
+  - "kubernetes.rules"
+  # - "cpu-usage.rules"
+  # - "mem-usage.rules"
+  # - "load-average.rules"
+  # - "low-disk-space.rules"
   # - "es-logs-status.rules"
   # - "first.rules"
   # - "second.rules"
