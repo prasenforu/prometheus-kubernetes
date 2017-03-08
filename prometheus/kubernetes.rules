@@ -1,0 +1,50 @@
+ALERT APIServerStatus
+  IF up{job="kubernetes-cluster"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="APIServer {{ $labels.instance }} is down", summary="APIServer down"}
+ALERT NodeStatus
+  IF up{job="kubernetes-nodes"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="Node {{ $labels.instance }} is down", summary="Node down"}
+ALERT Node-exporterStatus
+  IF up{job="kubernetes-nodes-exporter"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="Node {{ $labels.instance }} is down", summary="Node Exporter down"}
+ALERT PodStatus
+  IF up{job="kubernetes-pods"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="Pod {{ $labels.instance }} is down", summary="Pod down"}
+ALERT ServiceStatus
+  IF up{job="kubernetes-services"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="Service {{ $labels.instance }} is down", summary="Service down"}
+ALERT ServiceEndpointStatus
+  IF up{job="kubernetes-service-endpoints"} == 0
+  FOR 30s
+  LABELS {severity="page"}
+  ANNOTATIONS {description="Service endpoint {{ $labels.instance }} is down", summary="Service endpoint down"}
+ALERT ClusterHighMemoryUsage
+  IF (sum(container_memory_usage_bytes{id="/",job="kubernetes-nodes"}) / sum(machine_memory_bytes{job="kubernetes-nodes"}) * 100) >= 90
+  FOR 5m
+  LABELS {severity="page"}
+  ANNOTATIONS {summary="Overall Cluster memory usage is >= 90% (current value: {{ $value }}%)"}
+ALERT NodeHighCPUUsage
+  IF (sum(rate(container_cpu_usage_seconds_total{id="/",job="kubernetes-nodes"}[5m])) BY (instance)) / sum(machine_cpu_cores{job="kubernetes-nodes"}) BY (instance) * 100 >= 80
+  FOR 5m
+  LABELS {severity="page"}
+  ANNOTATIONS {summary="Node CPU usage of {{ $labels.instance }} instance  >= 80% (current value: {{ $value }}%)"}
+ALERT NodeHighDiskUsage
+  IF sort((container_fs_usage_bytes{device="/dev/xvda1",id="/",job="kubernetes-nodes"}) / (container_fs_limit_bytes{device="/dev/xvda1",id="/",job="kubernetes-nodes"})) * 100 >= 90
+  FOR 5m
+  LABELS {severity="page"}
+  ANNOTATIONS {summary="Node Disk usage of {{ $labels.instance }} instance  >= 90% (current value: {{ $value }}%)"}
+ALERT NodeHighMemoryUsage
+  IF sum(container_memory_usage_bytes{id="/",job="kubernetes-nodes"}) BY (instance) / sum(machine_memory_bytes{job="kubernetes-nodes"}) BY (instance) * 100 >= 90
+  FOR 5m
+  LABELS {severity="page"}
+  ANNOTATIONS {summary="Node memory usage of {{ $labels.instance }} instance  >= 90% (current value: {{ $value }}%)"}
